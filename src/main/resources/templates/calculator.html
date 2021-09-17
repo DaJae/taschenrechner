@@ -5,10 +5,12 @@
     <meta charset="UTF-8">
     <title>Calculator</title>
 
-    <script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
         window.onload = function (){
             document.getElementById("userAgent").value = navigator.userAgent;
-        }
+        };
+
+
     </script>
 
     <style th:inline="text">
@@ -50,13 +52,25 @@
 
     <div class="calculator">
         <div class="input">
-            <form  id="formId" th:action="@{/calculate}" method="post">
-                <input type="text" th:name="formula" th:value="${pastFormula}">
-                <input type="hidden" th:name="userAgent" id="userAgent">
-                <input type="submit" id="submitId">
-            </form>
-             <p id="resultId" th:text="${result}">Here will be the result</p>
+                <input type="text" id="formulaInput">
+                <button type="button" onclick="sendForm()">Calculate</button>
+                <p id="resultId">Here will be the result</p>
         </div>
     </div>
+
+<script>
+    function sendForm (){
+        $.ajax({
+            url: "http://localhost:8081/api/calculate",
+            method: "POST",
+            data: { 'formula' : document.getElementById("formulaInput").value.toString() },
+            dataType: "json",
+            success: [function (result){
+                document.getElementById("resultId").innerHTML = result["result"];
+                document.getElementById("formulaInput").value = result["pastFormula"];
+            }]
+        });
+    }
+</script>
 </body>
 </html>

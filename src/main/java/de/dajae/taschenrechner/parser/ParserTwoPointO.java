@@ -50,6 +50,10 @@ public class ParserTwoPointO {
             if (ch == '-') {
                 x -= parseBase();
             }
+
+            if(ch == '^'){
+                x = parseBase();
+            }
         }
 
         return x;
@@ -71,7 +75,8 @@ public class ParserTwoPointO {
                 throw new SyntaxError("Missing \")\" at column " + pos);
             }
             nextChar();
-            return x;
+
+            return (ch == '^') ? Math.pow(x, parseBase()) : x;
         }
 
         //Numbers
@@ -114,6 +119,14 @@ public class ParserTwoPointO {
             nextChar(2);
             x = parseExp();
             x = Math.tan(x);
+
+            return x;
+        }
+
+        if (eq.substring(pos, pos+3).equals("log")){
+            nextChar(2);
+            x = parseExp();
+            x = Math.log(x);
 
             return x;
         }
